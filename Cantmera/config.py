@@ -43,6 +43,9 @@ def update_value(var, val, increment=False):
 
     save_config()
 
+def get_value(var):
+    global values
+    return values[var]
 
 def save_config():
     global values
