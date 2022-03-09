@@ -1,12 +1,12 @@
 import tweepy
 
 auth = tweepy.OAuthHandler(
-    "Bh9K7eFCkp0O9qTEQsNdWprcG",
-    "fkgGzc69VxMn1GKueImYXkdXqj3PbNwwjV7FtpwoOOOlrHElXH"
+    "",
+    ""
 )
 auth.set_access_token(
-    "1496237541212798980-GGv66g4jLusC4QJbpSNniDGfYXCb9Q",
-    "mNjLegekoLwyEPrqvbZBWWCBFMuEJUB7IOLbzZt3fmD7x"
+    "",
+    ""
 )
 
 # auth = tweepy.OAuth1UserHandler(
