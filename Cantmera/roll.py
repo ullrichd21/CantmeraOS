@@ -1,35 +1,33 @@
+from menu import Menu
+
+from functools import partial
+
+import config as config
+import graphic
+
+
 class Roll:
     def __init__(self):
-
+        self.setup_complete = False
         self.held = False
-
-        self.screen = Screen()
+        self.screen_status = False  # True if the screen has changed
+        self.screen = None
         self.i = 0
         self.menus = [
-            Menu("Roll Size").add_option("5", lambda: print("Selected 5!"))
-                     .add_option("15", lambda: print("Selected 15!"))
-                     .add_option("30", lambda: print("Selected 30!")),
-            Menu("B/W?").add_option("Yes", lambda: print("Selected Yes!")).add_option("No", lambda: print("Selected No!"))
+            Menu("Roll Size").add_option("5", partial(config.update_value, "roll_size", 5))
+                .add_option("15", partial(config.update_value, "roll_size", 15))
+                .add_option("30", partial(config.update_value, "roll_size", 30)),
+            Menu("B/W?").add_option("Yes", partial(config.update_value, "BW", True)).add_option("No", partial(
+                config.update_value, "BW", False))
         ]
 
-        self.button = Button(5, bounce_time=0.1)
-        self.button.when_held = self.set_held
-        self.button.when_released = self.compute_input
-
         self.update_screen()
-        pause()
 
-    def set_held(self):
-        self.held = True
-
-    def compute_input(self):
-        # print(self.button.active_time)
-        if self.held != True:
+    def handle_input(self, button):
+        if button == "pressed":
             self.next()
-        else:
+        elif button == "held":
             self.do_action()
-
-        self.held = False
 
     def next(self):
         if self.menus[self.i].has_next_option():
@@ -37,13 +35,30 @@ class Roll:
         self.update_screen()
 
     def do_action(self):
-        print("Hello!")
-        self.i = (self.i + 1) % len(self.menus)
+        self.menus[self.i].do_action()
+        # self.i = (self.i + 1) % len(self.menus)
+        if self.i == len(self.menus) - 1:
+            config.update_value("active", True, save_now=True)
+            self.setup_complete = True
+            return
+        else:
+            self.i += 1
         self.update_screen()
 
+    def get_screen_status(self):
+        return self.screen_status
+
+    def get_screen(self):
+        self.screen_status = False
+        return self.screen
+
     def update_screen(self):
+        self.screen_status = True
         curr_menu = self.menus[self.i]
         opt = curr_menu.get_current_selection()
         img = graphic.generate_image(curr_menu.title, opt.title,
                                      highlighted=opt.selected, next=curr_menu.has_next_option())
-        self.screen.display(img)
+        self.screen = img
+
+    def get_setup_status(self):
+        return self.setup_complete

@@ -36,4 +36,5 @@ class Menu:
         return False
 
     def do_action(self):
-        return self.options[self.selection].action
+        f = self.options[self.selection].action
+        f()

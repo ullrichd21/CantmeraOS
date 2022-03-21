@@ -4,21 +4,19 @@ import board as board
 import busio
 import digitalio
 
-from PIL import Image, ImageDraw, ImageFont
-
 # Import the SSD1306 module.
 import adafruit_ssd1306
 import time
-import threading
+
 
 class Screen():
     def __init__(self):
-
+        time.sleep(5)  # Sleep and wait for screen to be ready!
         # init SPI
         spi = busio.SPI(board.SCLK, MOSI=board.MOSI)
-        reset_pin = digitalio.DigitalInOut(board.D4) # any pin!
-        cs_pin = digitalio.DigitalInOut(board.D27)    # any pin!
-        dc_pin = digitalio.DigitalInOut(board.D22)    # any pin!
+        reset_pin = digitalio.DigitalInOut(board.D4)  # any pin!
+        cs_pin = digitalio.DigitalInOut(board.D27)  # any pin!
+        dc_pin = digitalio.DigitalInOut(board.D22)  # any pin!
 
         WIDTH = 128
         HEIGHT = 32
@@ -33,6 +31,7 @@ class Screen():
         self.oled.show()
 
     def display(self, image):
+        print(f"Display {image}")
         self.clear()
         self.oled.image(image)
         self.oled.show()
